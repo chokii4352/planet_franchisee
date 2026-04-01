@@ -54,8 +54,3 @@ export default function HQLayout({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
-```
-
-저장 후 자동 재배포 기다렸다가 다시 접속해보세요!
-```
-https://planet-fran.vercel.app/hq/login
