@@ -1,5 +1,4 @@
-export const dynamic = 'force-dynamic'
-  
+export const dynamic = 'force-dynamic'  
 import { getSession } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import Link from 'next/link'
