@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 
 export async function POST(req: NextRequest) {
@@ -8,16 +7,13 @@ export async function POST(req: NextRequest) {
     const { password } = await req.json()
     const adminPassword = process.env.HQ_ADMIN_PASSWORD
 
-    console.log('입력 비밀번호:', password)
-    console.log('설정 비밀번호:', adminPassword)
-
     if (!adminPassword || password !== adminPassword) {
       return NextResponse.json({ error: '비밀번호 오류' }, { status: 401 })
     }
 
     const { data: user } = await supabaseAdmin
       .from('users')
-      .select('id, brand_id, store_id, role')
+      .select('id, role')
       .eq('role', 'hq_admin')
       .single()
 
@@ -36,7 +32,8 @@ export async function POST(req: NextRequest) {
       process.env.JWT_SECRET!
     )
 
-    cookies().set('fp_session', token, {
+    const response = NextResponse.json({ success: true })
+    response.cookies.set('fp_session', token, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
@@ -44,7 +41,7 @@ export async function POST(req: NextRequest) {
       path: '/',
     })
 
-    return NextResponse.json({ success: true })
+    return response
   } catch (err) {
     console.error('로그인 오류:', err)
     return NextResponse.json({ error: '서버 오류' }, { status: 500 })
